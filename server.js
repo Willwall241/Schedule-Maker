@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(express.static("client/build"));
 
  // For Passport
-app.use(session({ secret: 'superSecretschedule-app',resave: true, saveUninitialized:true})); // session secret
+app.use(session({ secret: 'superSecrettest',resave: true, saveUninitialized:true})); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 require('./config/passport.js')(passport,models.User);
@@ -29,7 +29,7 @@ mongoose.Promise = global.Promise;
 // Connect to the Mongo DB
 //add mongo heroku uri
 mongoose.connect(
-  process.env.MONGODB_URI || "mongodb://localhost/schedule-app-development"
+  process.env.MONGODB_URI || "mongodb://localhost/test-development"
 );
 
 // Start the API server

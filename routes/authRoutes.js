@@ -8,7 +8,7 @@ module.exports = function (passport) {
 			res.json({
 				userId: req.user._id,
 				username: req.user.username,
-				isAuthenticated: true
+				isAuthenticated: true,
 			});
 			//you can also pass up any other fields you with to expose
 			//for example, 
@@ -23,19 +23,23 @@ module.exports = function (passport) {
 	});
 
 	router.post("/signup",function(req,res){
+		console.log(req.body);
 		const newUser = req.body;
 		User.register(newUser,newUser.password,(err,user)=>{
 			if (err){ return res.json(err.message); }
 			res.json({
 				userId: user._id,
 				username: user.username,
-				isAuthenticated: true
+				isAuthenticated: true,
+				schedule: {
+					Monday: {Start: user.MStart}
+				} 
 			});
 		});
 	});
 
 	router.post("/signin",passport.authenticate('local') ,function(req,res){
-		// console.log(req.user);
+		console.log(req.user);
 		res.json({
 			userId: req.user._id,
 			username: req.user.username,
