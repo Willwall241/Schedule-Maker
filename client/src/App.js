@@ -1,41 +1,13 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 import Navbar from './components/Nav';
-// import Home from './components/Home';
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
-// import News from "./pages/news";
 import Main from './pages/Main';
 import axios from 'axios';
-import Grid from '@material-ui/core/Grid';
-import ClientModal from './components/Modal';
+// import Grid from '@material-ui/core/Grid';
+// import ClientModal from './components/Modal';
 
-// const Hours = [
-//   {time: '01:00 AM'},
-//   {time: '02:00 AM'},
-//   {time: '03:00 AM'},
-//   {time: '04:00 AM'},
-//   {time: '05:00 AM'},
-//   {time: '06:00 AM'},
-//   {time: '07:00 AM'},
-//   {time: '08:00 AM'},
-//   {time: '09:00 AM'},
-//   {time: '10:00 AM'},
-//   {time: '11:00 AM'},
-//   {time: '12:00 PM'},
-//   {time: '01:00 PM'},
-//   {time: '02:00 PM'},
-//   {time: '03:00 PM'},
-//   {time: '04:00 PM'},
-//   {time: '05:00 PM'},
-//   {time: '06:00 PM'},
-//   {time: '07:00 PM'},
-//   {time: '08:00 PM'},
-//   {time: '09:00 PM'},
-//   {time: '10:00 PM'},
-//   {time: '11:00 PM'},
-//   {time: '12:00 AM'}
-// ]
 
 class App extends Component {
   state = {
@@ -80,6 +52,12 @@ class App extends Component {
       FLunch: '',
       FEnd: '',
       events: []
+    },
+    searched: {
+      username: '',
+      useremail: '',
+      userschedule: '',
+      userevents: ''
     }
   };
 
@@ -93,13 +71,20 @@ class App extends Component {
 
   componentWillMount() {
     axios.get('/auth/isAuthenticated').then(result => {
-      const { userId, isAuthenticated, username, schedule } = result.data;
+      const {
+        userId,
+        isAuthenticated,
+        username,
+        schedule,
+        events
+      } = result.data;
       this.setState({
         auth: {
           userId,
           isAuthenticated,
           username,
-          schedule
+          schedule,
+          events
         }
       });
     });
@@ -138,21 +123,50 @@ class App extends Component {
       password: this.state.password,
       firstName: this.state.firstName,
       lastName: this.state.lastName,
-      MStart: this.state.MStart,
-      MLunch: this.state.MLunch,
-      MEnd: this.state.MEnd,
-      TStart: this.state.TStart,
-      TLunch: this.state.TLunch,
-      TEnd: this.state.TEnd,
-      WStart: this.state.WStart,
-      WLunch: this.state.WLunch,
-      WEnd: this.state.WEnd,
-      ThStart: this.state.ThStart,
-      ThLunch: this.state.ThLunch,
-      ThEnd: this.state.ThEnd,
-      FStart: this.state.FStart,
-      FLunch: this.state.FLunch,
-      FEnd: this.state.FEnd
+      email: this.state.email,
+      Schedule: {
+        Monday: {
+          MStart: this.state.MStart,
+          MLunch: this.state.MLunch,
+          MEnd: this.state.MEnd
+        },
+        Tuesday: {
+          TStart: this.state.TStart,
+          TLunch: this.state.TLunch,
+          TEnd: this.state.TEnd
+        },
+        Wednesday: {
+          WStart: this.state.WStart,
+          WLunch: this.state.WLunch,
+          WEnd: this.state.WEnd
+        },
+        Thursday: {
+          ThStart: this.state.ThStart,
+          ThLunch: this.state.ThLunch,
+          ThEnd: this.state.ThEnd
+        },
+        Friday: {
+          FStart: this.state.FStart,
+          FLunch: this.state.FLunch,
+          FEnd: this.state.FEnd
+        }
+      }
+      // ,
+      // MStart: this.state.MStart,
+      // MLunch: this.state.MLunch,
+      // MEnd: this.state.MEnd,
+      // TStart: this.state.TStart,
+      // TLunch: this.state.TLunch,
+      // TEnd: this.state.TEnd,
+      // WStart: this.state.WStart,
+      // WLunch: this.state.WLunch,
+      // WEnd: this.state.WEnd,
+      // ThStart: this.state.ThStart,
+      // ThLunch: this.state.ThLunch,
+      // ThEnd: this.state.ThEnd,
+      // FStart: this.state.FStart,
+      // FLunch: this.state.FLunch,
+      // FEnd: this.state.FEnd
     };
     this.setState({
       username: '',
@@ -162,18 +176,60 @@ class App extends Component {
     axios.post(name, newUser).then(data => {
       console.log('This is data' + data);
       if (data.data.isAuthenticated) {
-        const { userId, isAuthenticated, username, schedule } = data.data;
+        console.log(data.data);
+        const {
+          userId,
+          isAuthenticated,
+          username,
+          schedule,
+          events
+        } = data.data;
         this.setState({
           auth: {
             userId,
             isAuthenticated,
             username,
-            schedule
+            schedule,
+            events
           }
         });
       }
     });
   };
+
+  // handleSearch = event => {
+  //   event.preventDefault();
+  //   console.log('UserSearch');
+  //   //call a sign In function
+  //   const newUser = {};
+  //   this.setState({
+  //     username: '',
+  //     password: ''
+  //   });
+  //   const { name } = event.target;
+  //   axios.post(name, newUser).then(data => {
+  //     console.log('This is data' + data);
+  //     if (data.data.isAuthenticated) {
+  //       console.log(data.data);
+  //       const {
+  //         userId,
+  //         isAuthenticated,
+  //         username,
+  //         schedule,
+  //         events
+  //       } = data.data;
+  //       this.setState({
+  //         auth: {
+  //           userId,
+  //           isAuthenticated,
+  //           username,
+  //           schedule,
+  //           events
+  //         }
+  //       });
+  //     }
+  //   });
+  // };
 
   handleLogout = event => {
     event.preventDefault();
@@ -258,16 +314,7 @@ class App extends Component {
               if (!loggedIn) {
                 return <Redirect to="/" />;
               } else {
-                return (
-                  <div>
-                  <ClientModal/>
-                  <Grid container spacing={24} justify={'center'}>
-                    <Grid item xs={8}>
-                      <Main auth={this.state.auth} />
-                    </Grid>
-                  </Grid>
-                  </div>
-                );
+                return <Main auth={this.state.auth} />;
               }
             }}
           />

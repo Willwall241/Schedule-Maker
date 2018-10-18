@@ -285,7 +285,7 @@ const SignUp = props => {
               // }}
             />
             <input
-              name="FridayEnd"
+              name="FEnd"
               value={props.FEnd}
               onChange={props.handleChange}
               label="End"

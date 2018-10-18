@@ -32,7 +32,11 @@ class FullScreenDialog extends React.Component {
   state = {
     open: false,
     fName: '',
-    lName: ''
+    lName: '',
+    bDay: '',
+    iepDate: '',
+    revalDate: '',
+    grade: ''
   };
 
   handleClickOpen = () => {
@@ -48,6 +52,8 @@ class FullScreenDialog extends React.Component {
       [name]: event.target.value
     });
   };
+
+
 
   render() {
     const { classes } = this.props;
@@ -81,7 +87,7 @@ class FullScreenDialog extends React.Component {
           <form noValidate autoComplete="off">
             <h1>Client Information Form</h1>
             <TextField
-              id="client-name"
+              id="first-name"
               label="First Name"
               className={classes.textField}
               value={this.state.fName}
@@ -89,14 +95,58 @@ class FullScreenDialog extends React.Component {
               margin="normal"
             />
             <TextField
-              id="client-name"
+              id="last-name"
               label="Last Name"
               className={classes.textField}
               value={this.state.lName}
               onChange={this.handleChange('name')}
               margin="normal"
             />
+            <br />
+            <TextField
+              id="birthday"
+              label="Birthday"
+              className={classes.textField}
+              value={this.state.bDay}
+              onChange={this.handleChange('name')}
+              margin="normal"
+            />
+            <TextField
+              id="grade"
+              label="Grade"
+              className={classes.textField}
+              value={this.state.grade}
+              onChange={this.handleChange('name')}
+              margin="normal"
+            />
+            <br />
+            <TextField
+              id="IEP"
+              label="IEP Date"
+              className={classes.textField}
+              value={this.state.iepDate}
+              onChange={this.handleChange('name')}
+              margin="normal"
+            />
+            <TextField
+              id="ReEval Date"
+              label="Re-Eval Date"
+              className={classes.textField}
+              value={this.state.revalDate}
+              onChange={this.handleChange('name')}
+              margin="normal"
+            />
+            <br />
+            <TextField
+              id="time-restrictions"
+              label="Time Restricitons"
+              className={classes.textField}
+              value={this.state.revalDate}
+              onChange={this.handleChange('name')}
+              margin="normal"
+            />
           </form>
+          <Button onClick={this.fillArray}>Click this</Button>
         </Dialog>
       </div>
     );

@@ -1,5 +1,5 @@
 body {
   min-height: 100vh;
-  overflow: 'no-scroll';
+  overflow: 'hidden';
   width: 100%;
 }

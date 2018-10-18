@@ -7,6 +7,13 @@ const User = new Schema({
   lastName: String,
   email: String,
   Date: { type: Date, default: Date.now },
+  Schedule: {
+    Monday: {MStart: String, MLunch: String, MEnd: String},
+    Tuesday: {TStart: String, TLunch: String, TEnd: String},
+    Wednesday: {WStart: String, WLunch: String, WEnd: String},
+    Thursday: {ThStart: String, ThLunch: String, ThEnd: String},
+    Friday: {FStart: String, FLunch: String, FEnd: String},
+  },
   MStart: String,
   MLunch: String,
   MEnd: String,
