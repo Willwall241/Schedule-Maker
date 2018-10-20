@@ -2,17 +2,36 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const passportLocalMongoose = require('passport-local-mongoose');
 
+const validateEmail = function(email) {
+
+  var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+  return re.test(email)
+
+};
+
 const User = new Schema({
   firstName: String,
   lastName: String,
-  email: String,
+  email: {
+    type: String,
+
+    Required: 'Email address cannot be left blank.',
+
+    validate: [validateEmail, 'Please fill a valid email address'],
+    match: [
+      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+      'Please fill a valid email address'
+    ],
+    index: { unique: true, dropDups: true }
+  },
   Date: { type: Date, default: Date.now },
   Schedule: {
-    Monday: {MStart: String, MLunch: String, MEnd: String},
-    Tuesday: {TStart: String, TLunch: String, TEnd: String},
-    Wednesday: {WStart: String, WLunch: String, WEnd: String},
-    Thursday: {ThStart: String, ThLunch: String, ThEnd: String},
-    Friday: {FStart: String, FLunch: String, FEnd: String},
+    Monday: { MStart: String, MLunch: String, MEnd: String },
+    Tuesday: { TStart: String, TLunch: String, TEnd: String },
+    Wednesday: { WStart: String, WLunch: String, WEnd: String },
+    Thursday: { ThStart: String, ThLunch: String, ThEnd: String },
+    Friday: { FStart: String, FLunch: String, FEnd: String }
   },
   MStart: String,
   MLunch: String,

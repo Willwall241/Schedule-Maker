@@ -1,23 +1,82 @@
 import React from 'react';
-import "./style.css";
-import {Link} from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import './style.css';
+import TextField from '@material-ui/core/TextField';
+import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 
-const SignIn = (props)=> {
-	return (
-		<div>
-			<h1>SIGN IN</h1>
-			<Link to = "/signup" >Go to sign up</Link>
-			<form>
-				<label>Email</label><br/>
-				<input value = {props.username} onChange = {props.handleChange} name='username' type='email' placeholder = 'example@email.com'/>
-				<br />
-				<label>Password</label><br/>
-				<input name='password' type='password' value = {props.password} onChange = {props.handleChange} />
-				<br />
-				<button type = 'submit' name = "/auth/signin" onClick = {props.handleSubmit}>Sign In</button>
-			</form>
-		</div>
-	);
+const styles = theme => ({
+  root: {
+    ...theme.mixins.gutters(),
+    paddingTop: theme.spacing.unit * 2,
+    paddingBottom: theme.spacing.unit * 2
+  }
+});
+
+const SignIn = props => {
+  const { classes } = props;
+
+  return (
+    <div>
+      <Grid container spacing={0} justify={'center'}>
+        <Paper
+          className={classes.root}
+          elevation={1}
+          style={{ width: 'fit-content', marginTop: '10%' }}
+        >
+          <h1>SIGN IN</h1>
+
+          <form>
+            <br />
+            <TextField
+              value={props.username}
+							onChange={props.handleChange}
+							label="UserName"
+              name="username"
+              type="text"
+							placeholder="Input Username"
+							variant="outlined"
+
+            />
+            <br />
+
+            <br />
+            <TextField
+              name="password"
+							type="password"
+							label="Password"
+              value={props.password}
+							onChange={props.handleChange}
+							placeholder="Input Password"
+							variant="outlined"
+            />
+            <br />
+            <Button
+              type="submit"
+              name="/auth/signin"
+              onClick={props.handleSubmit}
+              label="sign in"
+            >
+              Sign In
+            </Button>
+						<Button
+              type="submit"
+							name="/signup"
+							href="/signup"
+            >
+            Sign Up
+            </Button>
+          </form>
+        </Paper>
+      </Grid>
+    </div>
+  );
 };
 
-export default SignIn;
+SignIn.propTypes = {
+  classes: PropTypes.object.isRequired
+};
+
+export default withStyles(styles)(SignIn);

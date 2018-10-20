@@ -1,4 +1,5 @@
 const User = require('../models').User;
+const Client = require('../models').Client;
 const eventsController = require('../controllers/eventsController');
 module.exports = function(passport) {
   const path = require('path');
@@ -33,12 +34,13 @@ module.exports = function(passport) {
     let tt = 420; // start time
     let ap = ['AM', 'PM']; // AM-PM
     let hours = '7:00';
-		let hour = hours.split(':', 1) * 60;
-		let end = parseInt(req.body.Schedule.Monday.MEnd.split(':', 1));
+    let hour = hours.split(':', 1) * 60;
+    let end = parseInt(req.body.Schedule.Monday.MEnd.split(':', 1));
 
     //loop to increment the time and push results in array
     for (let i = 0; tt < end * 60; i++) {
       let eventObj = {
+        names: [],
         title: '',
         start: ''
       };
@@ -48,16 +50,15 @@ module.exports = function(passport) {
       // + ap[Math.floor(hh / 12)]; // pushing data in array in [00:00 - 12:00 AM/PM format]
       tt = tt + x;
       eventObj.start = times[i];
-			eventObj.end = times[i].split(':', 1) + ':' + 30;
-			if(eventObj.start == req.body.Schedule.Monday.MLunch) {
-
-				eventObj.title = 'Lunch';
-			}
+      eventObj.end = times[i].split(':', 1) + ':' + 30;
+      if (eventObj.start == req.body.Schedule.Monday.MLunch) {
+        eventObj.title = 'Lunch';
+      }
 
       if (eventObj.start === '23:30') {
-				eventObj.end = '24:00'
-				events.push(eventObj);
-      } else if( eventObj.start === eventObj.end){
+        eventObj.end = '24:00';
+        events.push(eventObj);
+      } else if (eventObj.start === eventObj.end) {
         let x = parseInt(eventObj.end.split(':', 1));
 
         x = x + 1;
@@ -66,8 +67,8 @@ module.exports = function(passport) {
 
         events.push(eventObj);
       } else {
-				events.push(eventObj);
-			}
+        events.push(eventObj);
+      }
     }
     req.body.events = events;
     console.log(req.body.events);
@@ -87,9 +88,48 @@ module.exports = function(passport) {
     });
   });
 
-  router.post('/newclient', function(req, res) {
+  router.post('/newClient', function(req, res) {
+    console.log();
     console.log(req.body);
     const newClient = req.body;
+
+    Client.create(newClient)
+      .then(function(Client) {
+        console.log('Client created');
+        console.log(newClient.SpecialistEvents);
+        let events = newClient.SpecialistEvents;
+        for (i = 0; i < newClient.SpecialistEvents.length; i++) {
+          if (events[i].names.length <= 5 && events[i].title != 'Lunch') {
+            events[i].names.push(
+              newClient.firstName + ' ' + newClient.lastName
+            );
+            events[i].title = events[i].names;
+            console.log(newClient.firstName);
+          }
+          return User.findOneAndUpdate(
+            { _id: newClient.Specialist },
+            { $push: { client: Client._id }, $set: { events: events } }
+          );
+        }
+        console.log(events);
+      })
+      .catch(function(err) {
+        res.json(err);
+      });
+  });
+
+  router.post('/searchUser', function(req, res) {
+    const searchUser = req.body;
+    console.log(req.body);
+    console.log('blah');
+    User.findOne({ username: searchUser.username }).then(userInfo => {
+      console.log(userInfo);
+      return res.json({
+        searchUserName: userInfo.username,
+        searchUserEvents: userInfo.events,
+        searchUserId: userInfo._id
+      });
+    });
   });
 
   router.post('/signin', passport.authenticate('local'), function(req, res) {

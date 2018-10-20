@@ -4,9 +4,8 @@ import Navbar from './components/Nav';
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import Main from './pages/Main';
+
 import axios from 'axios';
-// import Grid from '@material-ui/core/Grid';
-// import ClientModal from './components/Modal';
 
 
 class App extends Component {
@@ -71,6 +70,7 @@ class App extends Component {
 
   componentWillMount() {
     axios.get('/auth/isAuthenticated').then(result => {
+
       const {
         userId,
         isAuthenticated,
@@ -88,36 +88,34 @@ class App extends Component {
         }
       });
     });
-  }
+  };
 
   handleChange = event => {
     event.preventDefault();
     const { name, value } = event.target;
-    // Set the state for the appropriate input field
 
     this.setState({
       [name]: value
     });
-    console.log(name, value);
+
   };
 
   handleTimeChange = event => {
     event.preventDefault();
     const { name, value } = event.target;
-    // Set the state for the appropriate input field
 
     this.setState({
       schedule: {
         [name]: value
       }
     });
-    console.log(name, value);
+
   };
 
   handleSubmit = event => {
     event.preventDefault();
-    console.log('fired');
-    //call a sign In function
+
+
     const newUser = {
       username: this.state.username,
       password: this.state.password,
@@ -151,32 +149,17 @@ class App extends Component {
           FEnd: this.state.FEnd
         }
       }
-      // ,
-      // MStart: this.state.MStart,
-      // MLunch: this.state.MLunch,
-      // MEnd: this.state.MEnd,
-      // TStart: this.state.TStart,
-      // TLunch: this.state.TLunch,
-      // TEnd: this.state.TEnd,
-      // WStart: this.state.WStart,
-      // WLunch: this.state.WLunch,
-      // WEnd: this.state.WEnd,
-      // ThStart: this.state.ThStart,
-      // ThLunch: this.state.ThLunch,
-      // ThEnd: this.state.ThEnd,
-      // FStart: this.state.FStart,
-      // FLunch: this.state.FLunch,
-      // FEnd: this.state.FEnd
     };
     this.setState({
       username: '',
       password: ''
     });
-    const { name } = event.target;
+
+    const { name } = event.currentTarget;
     axios.post(name, newUser).then(data => {
-      console.log('This is data' + data);
+
       if (data.data.isAuthenticated) {
-        console.log(data.data);
+
         const {
           userId,
           isAuthenticated,
@@ -197,43 +180,40 @@ class App extends Component {
     });
   };
 
-  // handleSearch = event => {
-  //   event.preventDefault();
-  //   console.log('UserSearch');
-  //   //call a sign In function
-  //   const newUser = {};
-  //   this.setState({
-  //     username: '',
-  //     password: ''
-  //   });
-  //   const { name } = event.target;
-  //   axios.post(name, newUser).then(data => {
-  //     console.log('This is data' + data);
-  //     if (data.data.isAuthenticated) {
-  //       console.log(data.data);
-  //       const {
-  //         userId,
-  //         isAuthenticated,
-  //         username,
-  //         schedule,
-  //         events
-  //       } = data.data;
-  //       this.setState({
-  //         auth: {
-  //           userId,
-  //           isAuthenticated,
-  //           username,
-  //           schedule,
-  //           events
-  //         }
-  //       });
-  //     }
-  //   });
-  // };
+  handleSearch = event => {
+
+
+    const searchUsern = {
+      username: this.state.searchUn
+    };
+    this.setState({
+      userSearch: {
+        searchUsername: '',
+        searchUserEvents: [],
+        searchUserId: ''
+      }
+    });
+
+    axios.post('/auth/searchUser', searchUsern).then(data => {
+
+      if (data) {
+        const { searchUserName, searchUserEvents, searchUserId } = data.data;
+        this.setState({
+          userSearch: {
+            searchUserName,
+            searchUserEvents,
+            searchUserId
+          },
+          isAuthenticated: true
+        });
+
+      }
+    });
+  };
 
   handleLogout = event => {
-    event.preventDefault();
-    console.log('Button Fired');
+
+
     axios.get('/auth/logout').then(result => {
       this.setState({
         auth: {
@@ -244,7 +224,7 @@ class App extends Component {
         }
       });
     });
-    console.log('test');
+
   };
 
   render() {
@@ -252,7 +232,13 @@ class App extends Component {
     return (
       <Router>
         <div>
-          <Navbar handleLogout={this.handleLogout} auth={this.state.auth} />
+          <Navbar
+            handleLogout={this.handleLogout}
+            handleSearch={this.handleSearch}
+            auth={this.state.auth}
+            handleChange={this.handleChange}
+            userSearch={this.state.searchUserName}
+          />
           <Route
             exact
             path="/"
@@ -318,6 +304,7 @@ class App extends Component {
               }
             }}
           />
+
         </div>
       </Router>
     );
@@ -326,23 +313,3 @@ class App extends Component {
 
 export default App;
 
-// class App extends Component {
-//  render() {
-//   // const loggedIn = this.state.auth.isAuthenticated;
-//   return (
-//     <Router>
-//      <div>
-//       <Navbar />
-//       <Switch>
-//        <Route exact path="/" component={SignIn} />
-//        <Route exact path="/Main" component={Main} />
-//        <Route exact path="/SignUp" component={SignUp} />
-//        {/* <Route exact path="/news" component={News} /> */}
-//       </Switch>
-//      </div>
-//     </Router>
-//   );
-//  };
-// };
-
-// export default App;

@@ -4,12 +4,12 @@ import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-// import IconButton from '@material-ui/core/IconButton';
-// import MenuIcon from '@material-ui/icons/Menu';
-// import ClientModal from '../Modal';
+import LogOut from '../LogOutButtton';
+import LogIn from '../LogInButtton';
+import Search from '../SearchUserSchedule';
+import { fade } from '@material-ui/core/styles/colorManipulator';
 
-const styles = {
+const styles = theme => ({
   root: {
     flexGrow: 1
   },
@@ -19,27 +19,74 @@ const styles = {
   menuButton: {
     marginLeft: -12,
     marginRight: 20
+  },
+  search: {
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.25)
+    },
+    marginLeft: 0,
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing.unit,
+      width: 'auto'
+    }
+  },
+  searchIcon: {
+    width: theme.spacing.unit * 9,
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  inputRoot: {
+    color: 'inherit',
+    width: '100%'
+  },
+  inputInput: {
+    paddingTop: theme.spacing.unit,
+    paddingRight: theme.spacing.unit,
+    paddingBottom: theme.spacing.unit,
+    paddingLeft: theme.spacing.unit * 10,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: 120,
+      '&:focus': {
+        width: 200
+      }
+    }
   }
-};
+});
 
 const Navbar = props => {
   const { classes } = props;
 
   return (
-    <div className={classes.root}>
-      <AppBar position="static">
+    <div
+      className={classes.root}
+      style={{ position: 'sticky', top: 0, zIndex: 99 }}
+    >
+      <AppBar style={{ background: '#115293' }}>
         <Toolbar>
-          {/* <IconButton
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="Menu"
-          >
-            <MenuIcon />
-          </IconButton> */}
+          <i className="material-icons">calendar_today </i>
           <Typography variant="h6" color="inherit" className={classes.grow}>
-            SLP Schedule
+            Daily Grind
           </Typography>
-          <Button onClick={props.handleLogout}>Log Out</Button>
+          {props.auth.isAuthenticated ? (
+            <Search search={props.userSearch} />
+          ) : (
+            ''
+          )}
+          {props.auth.isAuthenticated ? (
+            <LogOut onClick={props.handleLogout} />
+          ) : (
+            <LogIn />
+          )}
         </Toolbar>
       </AppBar>
     </div>

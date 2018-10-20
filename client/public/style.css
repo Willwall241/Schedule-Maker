@@ -1,5 +1,14 @@
 body {
   min-height: 100vh;
-  overflow: 'no-scroll';
+  overflow: auto;
+  background-size: cover;
   width: 100%;
+  /* background: url('./background.png'); */
+  background-color: rgba(65, 62, 62, 0.918);
+
+}
+
+#root {
+  overflow: hidden
+
 }
